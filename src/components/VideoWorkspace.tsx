@@ -147,7 +147,7 @@ const VideoWorkspace = () => {
                 <div className="glass-panel p-4 h-[500px] overflow-y-auto">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-medium">Clip Maker</h3>
-                    <Button variant="primary" size="sm" className="text-xs h-8">
+                    <Button variant="default" size="sm" className="text-xs h-8">
                       <Scissors className="h-3 w-3 mr-1" />
                       New Clip
                     </Button>
