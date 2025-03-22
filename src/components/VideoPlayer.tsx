@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { 
   Play, 
@@ -16,9 +15,10 @@ import { cn } from "@/lib/utils";
 
 interface VideoPlayerProps {
   className?: string;
+  videoUrl?: string | null;
 }
 
-const VideoPlayer = ({ className }: VideoPlayerProps) => {
+const VideoPlayer = ({ className, videoUrl }: VideoPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -29,6 +29,14 @@ const VideoPlayer = ({ className }: VideoPlayerProps) => {
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (videoRef.current && videoUrl) {
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setProgress(0);
+    }
+  }, [videoUrl]);
 
   useEffect(() => {
     const hideControls = () => {
@@ -163,19 +171,17 @@ const VideoPlayer = ({ className }: VideoPlayerProps) => {
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={() => setIsPlaying(false)}
         onClick={handlePlayPause}
+        src={videoUrl || ''}
       >
-        <source src="" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
-      {/* Video Controls */}
       <div 
         className={cn(
           "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 pt-12 transition-opacity duration-300",
           isControlsVisible ? "opacity-100" : "opacity-0"
         )}
       >
-        {/* Progress Bar */}
         <div className="mb-4">
           <Slider
             value={[progress]}
@@ -191,7 +197,6 @@ const VideoPlayer = ({ className }: VideoPlayerProps) => {
           </div>
         </div>
 
-        {/* Control Buttons */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
             <Button 
@@ -270,7 +275,6 @@ const VideoPlayer = ({ className }: VideoPlayerProps) => {
         </div>
       </div>
 
-      {/* Play/Pause overlay when video is paused */}
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/10">
           <Button
